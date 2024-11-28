@@ -1,4 +1,4 @@
-
+// src/components/ui/RegistrationForm.tsx
 import { useState } from 'react';
 
 export default function RegistrationForm() {
@@ -13,11 +13,24 @@ export default function RegistrationForm() {
 
  const [isSubmitting, setIsSubmitting] = useState(false);
  const [error, setError] = useState('');
+ const [success, setSuccess] = useState(false);
+
+ const resetForm = () => {
+   setFormData({
+     firstName: '',
+     lastName: '',
+     email: '',
+     phone: '',
+     company: '',
+     position: ''
+   });
+ };
 
  const handleSubmit = async (e: React.FormEvent) => {
    e.preventDefault();
    setIsSubmitting(true);
    setError('');
+   setSuccess(false);
 
    try {
      const response = await fetch('https://chatcampuslands.com:8443/landingpageapp/register', {
@@ -32,22 +45,29 @@ export default function RegistrationForm() {
        throw new Error('Error al registrar');
      }
 
-     // Redirect to WhatsApp after successful registration
+     setSuccess(true);
+     resetForm();
+
+     // Prepare WhatsApp message
      const whatsappText = encodeURIComponent(`
-¡Hola! Me he registrado al Master en IA Generativa
+¡Hola! Me he registrado al Master en IA Generativa 🚀
 
 Datos de registro:
-- Nombre: ${formData.firstName} ${formData.lastName}
-- Email: ${formData.email}
-- Teléfono: ${formData.phone}
-- Empresa: ${formData.company}
-- Cargo: ${formData.position}
+📋 Nombre: ${formData.firstName} ${formData.lastName}
+📧 Email: ${formData.email}
+📱 Teléfono: ${formData.phone}
+🏢 Empresa: ${formData.company}
+💼 Cargo: ${formData.position}
 
-Por favor, necesito información sobre el proceso de pago.`);
+Me gustaría recibir información sobre el proceso de pago y los siguientes pasos.`);
 
-     window.open(`https://wa.me/573012463004?text=${whatsappText}`, '_blank');
+     // Redirect to WhatsApp after 1.5 seconds
+     setTimeout(() => {
+       window.open(`https://wa.me/573012463004?text=${whatsappText}`, '_blank');
+     }, 1500);
      
    } catch (err) {
+     console.error('Error:', err);
      setError('Error al enviar el formulario. Por favor intenta nuevamente.');
    } finally {
      setIsSubmitting(false);
@@ -63,8 +83,14 @@ Por favor, necesito información sobre el proceso de pago.`);
        </div>
 
        {error && (
-         <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-4 rounded-lg mb-6">
+         <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-4 rounded-lg mb-6 animate-fade-in">
            {error}
+         </div>
+       )}
+
+       {success && (
+         <div className="bg-green-500/10 border border-green-500/50 text-green-400 p-4 rounded-lg mb-6 animate-fade-in">
+           ¡Registro completado con éxito! Redirigiendo a WhatsApp...
          </div>
        )}
 
@@ -82,6 +108,8 @@ Por favor, necesito información sobre el proceso de pago.`);
                         focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent
                         text-white placeholder:text-white/30"
              required
+             disabled={isSubmitting}
+             placeholder="Ej: Juan"
            />
          </div>
 
@@ -98,15 +126,37 @@ Por favor, necesito información sobre el proceso de pago.`);
                         focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent
                         text-white placeholder:text-white/30"
              required
+             disabled={isSubmitting}
+             placeholder="Ej: Pérez"
            />
          </div>
        </div>
 
        {[
-         { label: 'Email', name: 'email', type: 'email' },
-         { label: 'Celular', name: 'phone', type: 'tel' },
-         { label: 'Empresa', name: 'company', type: 'text' },
-         { label: 'Cargo', name: 'position', type: 'text' }
+         { 
+           label: 'Email', 
+           name: 'email', 
+           type: 'email',
+           placeholder: 'correo@ejemplo.com'
+         },
+         { 
+           label: 'Celular', 
+           name: 'phone', 
+           type: 'tel',
+           placeholder: '+57 300 123 4567'
+         },
+         { 
+           label: 'Empresa', 
+           name: 'company', 
+           type: 'text',
+           placeholder: 'Nombre de tu empresa'
+         },
+         { 
+           label: 'Cargo', 
+           name: 'position', 
+           type: 'text',
+           placeholder: 'Tu cargo actual'
+         }
        ].map(field => (
          <div key={field.name} className="space-y-2">
            <label className="block text-sm font-medium text-white/80">
@@ -121,6 +171,8 @@ Por favor, necesito información sobre el proceso de pago.`);
                         focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent
                         text-white placeholder:text-white/30"
              required
+             disabled={isSubmitting}
+             placeholder={field.placeholder}
            />
          </div>
        ))}
@@ -131,9 +183,17 @@ Por favor, necesito información sobre el proceso de pago.`);
          className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 
                     hover:to-blue-700 text-white px-8 py-4 rounded-lg font-medium 
                     transition-all transform hover:scale-105 disabled:opacity-50 
-                    disabled:cursor-not-allowed"
+                    disabled:cursor-not-allowed disabled:hover:scale-100"
        >
-         {isSubmitting ? 'Enviando...' : 'Completar Inscripción'}
+         {isSubmitting ? (
+           <span className="flex items-center justify-center">
+             <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+             </svg>
+             Procesando...
+           </span>
+         ) : 'Completar Inscripción'}
        </button>
 
        <p className="text-center text-sm text-white/60 mt-4">
