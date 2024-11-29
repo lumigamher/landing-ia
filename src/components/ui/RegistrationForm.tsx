@@ -63,7 +63,7 @@ Me gustaría recibir información sobre el proceso de pago y los siguientes paso
 
      // Redirect to WhatsApp after 1.5 seconds
      setTimeout(() => {
-       window.open(`https://wa.me/573012463004?text=${whatsappText}`, '_blank');
+       window.open(`https://wa.me/573160522555?text=${whatsappText}`, '_blank');
      }, 1500);
      
    } catch (err) {
