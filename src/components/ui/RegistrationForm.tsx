@@ -50,16 +50,17 @@ export default function RegistrationForm() {
 
      // Prepare WhatsApp message
      const whatsappText = encodeURIComponent(`
-¡Hola! Me he registrado al Master en IA Generativa 🚀
+
+Para completar el registro envia tu cédula en pdf!!
 
 Datos de registro:
 📋 Nombre: ${formData.firstName} ${formData.lastName}
 📧 Email: ${formData.email}
 📱 Teléfono: ${formData.phone}
-🏢 Empresa: ${formData.company}
-💼 Cargo: ${formData.position}
+🏢 Carrera: ${formData.company}
+💼 Semestre: ${formData.position}
 
-Me gustaría recibir información sobre el proceso de pago y los siguientes pasos.`);
+Para completar el registro envia tu cédula en pdf!!  `);
 
      // Redirect to WhatsApp after 1.5 seconds
      setTimeout(() => {
@@ -146,16 +147,16 @@ Me gustaría recibir información sobre el proceso de pago y los siguientes paso
            placeholder: '+57 300 123 4567'
          },
          { 
-           label: 'Empresa', 
+           label: 'Carrera', 
            name: 'company', 
            type: 'text',
-           placeholder: 'Nombre de tu empresa'
+           placeholder: 'Nombre de tu Carrera'
          },
          { 
-           label: 'Cargo', 
+           label: 'Semestre', 
            name: 'position', 
            type: 'text',
-           placeholder: 'Tu cargo actual'
+           placeholder: 'Semestre actual'
          }
        ].map(field => (
          <div key={field.name} className="space-y-2">
