@@ -147,16 +147,16 @@ Para completar el registro envia tu cédula en pdf!!  `);
            placeholder: '+57 300 123 4567'
          },
          { 
-           label: 'Carrera', 
+           label: 'Empresa', 
            name: 'company', 
            type: 'text',
-           placeholder: 'Nombre de tu Carrera'
+           placeholder: 'Nombre de tu empresa'
          },
          { 
-           label: 'Semestre', 
+           label: 'Cargo', 
            name: 'position', 
            type: 'text',
-           placeholder: 'Semestre actual'
+           placeholder: 'Nombre de tu Cargo'
          }
        ].map(field => (
          <div key={field.name} className="space-y-2">
